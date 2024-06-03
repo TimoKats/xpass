@@ -60,7 +60,7 @@ func listObjectsInLocker(lockername string) error {
 	key, ok := keys[lockername]
 	if ok {
     filename := lockerPath + "/" + lockername + ".aes"
-	  lockerContent, err := DecryptRead(filename, key)
+    lockerContent, err := DecryptRead(filename, key)
     credentials := strings.Split(lockerContent, "\n")
     for _, credential := range credentials[1:] {
       credentialFields := strings.Split(credential, "\t")
