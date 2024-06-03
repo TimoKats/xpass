@@ -1,6 +1,7 @@
 package lib
 
 import (
+  "strings"
   "errors"
   "os"
 )
@@ -47,7 +48,7 @@ func CatLocker(arguments []string) error {
 	  if ok {
       filename := lockerPath + "/" + arguments[1] + ".aes"
 	    content, err := DecryptRead(filename, key)
-	    Info.Println(content)
+	    Info.Println("\n\n" + content)
 	    return err
 	  }
 	  return errors.New("No key submitted for this locker.")
@@ -55,3 +56,30 @@ func CatLocker(arguments []string) error {
   return errors.New("No locker name submitted. xpass cat-locker <<name>>")
 }
 
+func listObjectsInLocker(lockername string) error {
+	key, ok := keys[lockername]
+	if ok {
+    filename := lockerPath + "/" + lockername + ".aes"
+	  lockerContent, err := DecryptRead(filename, key)
+    credentials := strings.Split(lockerContent, "\n")
+    for _, credential := range credentials[1:] {
+      credentialFields := strings.Split(credential, "\t")
+      Info.Println(credentialFields[0])
+	  }
+	  return err
+	}
+	return errors.New("No key submitted for this locker.")
+}
+
+func ListObjects(arguments []string) error {
+  if len(arguments) == 1 {
+    lockers, _ := os.ReadDir(lockerPath)
+    for _, locker := range lockers {
+      Info.Println(locker.Name()[:len(locker.Name()) - 4])
+    }
+    return nil
+  } else if len(arguments) == 2 {
+    return listObjectsInLocker(arguments[1]) 
+  }
+  return errors.New("Unkown command. xpass ls <<name: optional>>")
+}

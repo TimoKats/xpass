@@ -16,12 +16,12 @@ func exitCommand(command string) bool {
 
 func parseCommand(command []string) error {
 	switch command[0] {
+		case "ls":
+			return xps.ListObjects(command)
 		case "add":
-			xps.Info.Println("adding a pass combination")
-		case "update":
-			xps.Info.Println("updating a pass combination")
-		case "remove":
-			xps.Info.Println("removing a pass combination")
+			return xps.AddCredentials(command)
+		case "get":
+			return xps.GetCredentials(command)
 		case "unlock":
 			return xps.AddKey(command)
 		case "create-locker":
@@ -45,8 +45,6 @@ func main() {
 		parseErr := parseCommand(strings.Fields(command))
 		if parseErr != nil {
 			xps.Error.Println(parseErr)
-		} else {
-			xps.Info.Println("Command parsed successfully.")
 		}
 	}
 }
