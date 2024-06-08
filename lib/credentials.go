@@ -24,14 +24,14 @@ func GetCredentials(arguments []string) error {
   if len(arguments) == 3 {
 	  key, ok := keys[arguments[1]]
 	  if ok {
-      filename := lockerPath + "/" + arguments[1] + ".aes"
+      filename := LockerPath + "/" + arguments[1] + ".aes"
 	    content, err := DecryptRead(filename, key)
 	    findCredentials(content, arguments[2])
 	    return err
 	  }
 	  return errors.New("No key submitted for this locker.")
   }
-  return errors.New("No locker name submitted. xpass cat-locker <<name>>")
+  return errors.New("No locker name submitted: get <<lockername>> <<id>>")
 }
 
 func appendCredential(content string, credentialId string) string {
@@ -46,7 +46,7 @@ func AddCredentials(arguments []string) error {
   if len(arguments) == 3 {
 	  key, ok := keys[arguments[1]]
 	  if ok {
-      filename := lockerPath + "/" + arguments[1] + ".aes"
+      filename := LockerPath + "/" + arguments[1] + ".aes"
 	    content, err := DecryptRead(filename, key)
 	    newContent := appendCredential(content, arguments[2])
       os.Remove(filename) // Can't overwrite encrypted files
@@ -55,6 +55,6 @@ func AddCredentials(arguments []string) error {
 	  }
 	  return errors.New("No key submitted for this locker.")
   }
-  return errors.New("No locker name submitted. xpass cat-locker <<name>>")
+  return errors.New("No locker name submitted: add <<lockername>> <<id>>")
 }
 

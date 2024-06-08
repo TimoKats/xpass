@@ -17,18 +17,15 @@ func createHash(key string) string {
 	return hex.EncodeToString(hasher.Sum(nil))
 }
 
-func encrypt(data []byte, passphrase string) []byte {
+func encrypt(data []byte, passphrase string) ([]byte, error) {
 	block, _ := aes.NewCipher([]byte(createHash(passphrase)))
-	gcm, err := cipher.NewGCM(block)
-	if err != nil {
-		panic(err.Error()) //NOTE: throw error!
-	}
+	gcm, _ := cipher.NewGCM(block)
 	nonce := make([]byte, gcm.NonceSize())
-	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
-		panic(err.Error()) //NOTE: throw error!
+	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
+		return []byte(""), errors.New("Error when encrypting the data.")
 	}
 	ciphertext := gcm.Seal(nonce, nonce, data, nil)
-	return ciphertext
+	return ciphertext, nil
 }
 
 func decrypt(data []byte, passphrase string) ([]byte, error) {
@@ -49,11 +46,11 @@ func decrypt(data []byte, passphrase string) ([]byte, error) {
 
 func EncryptWrite(lockername string, value string) error {
 	key, ok := keys[lockername]
-	filename := lockerPath + "/" + lockername + ".aes"
+	filename := LockerPath + "/" + lockername + ".aes"
 	if ok {
-  	cipher := encrypt([]byte(value), key)
+  	cipher, err := encrypt([]byte(value), key)
 		ioutil.WriteFile(filename, cipher, 777)
-  	return nil
+  	return err
 	}
 	return errors.New("No key submitted for this locker.")
 }

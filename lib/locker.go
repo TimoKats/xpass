@@ -6,14 +6,14 @@ import (
   "os"
 )
 
-var lockerPath = "/home/timokats/.xpass"
+var LockerPath = os.Getenv("XPASS_LOCKER")
 
 func createLockerText(lockername string) string {
   return "LOCKERNAME: [" + lockername + "]\n"
 }
 
 func createLockerFolder() error {
-  err := os.MkdirAll(lockerPath, os.ModePerm)
+  err := os.MkdirAll(LockerPath, os.ModePerm)
   if err != nil {
     return errors.New("Error when creating the xpass folder. Please check path.")
   }
@@ -46,7 +46,7 @@ func CatLocker(arguments []string) error {
   if len(arguments) == 2 {
 	  key, ok := keys[arguments[1]]
 	  if ok {
-      filename := lockerPath + "/" + arguments[1] + ".aes"
+      filename := LockerPath + "/" + arguments[1] + ".aes"
 	    content, err := DecryptRead(filename, key)
 	    Info.Println("\n\n" + content)
 	    return err
@@ -59,7 +59,7 @@ func CatLocker(arguments []string) error {
 func listObjectsInLocker(lockername string) error {
 	key, ok := keys[lockername]
 	if ok {
-    filename := lockerPath + "/" + lockername + ".aes"
+    filename := LockerPath + "/" + lockername + ".aes"
     lockerContent, err := DecryptRead(filename, key)
     credentials := strings.Split(lockerContent, "\n")
     for _, credential := range credentials[1:] {
@@ -73,7 +73,7 @@ func listObjectsInLocker(lockername string) error {
 
 func ListObjects(arguments []string) error {
   if len(arguments) == 1 {
-    lockers, _ := os.ReadDir(lockerPath)
+    lockers, _ := os.ReadDir(LockerPath)
     for _, locker := range lockers {
       Info.Println(locker.Name()[:len(locker.Name()) - 4])
     }
