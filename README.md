@@ -9,6 +9,3 @@ If you want to use it, then you can run the program like any other GO program. N
  - add _"lockername"_ _"password id"_: Adds a username/password combination in a locker with a password id.
  - get _"lockername"_ _"password id"_: Gets a username/password combination and returns them to the standard output.
  - cat _"lockername"_: Print the raw locker contents.
-
-## Next steps
- - Add password to clipboard.
