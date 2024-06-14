@@ -1,6 +1,7 @@
 package lib
 
 import (
+  "golang.design/x/clipboard"
   "strings"
   "errors"
   "os"
@@ -8,11 +9,14 @@ import (
 
 func findCredentials(lockerContent string, credentialsId string) (string, error) {
   credentials := strings.Split(lockerContent, "\n")
+  clipboard.Init()
   for _, credential := range credentials {
     credentialFields := strings.Split(credential, "\t")
     if credentialFields[0] == credentialsId {
       Warn.Println("username: ", credentialFields[1])
       Warn.Println("password: ", credentialFields[2])
+      clipboard.Write(clipboard.FmtText, []byte(credentialFields[2]))
+      Warn.Println("Password copied to clipboard.")
       return "", nil
     }
   }
