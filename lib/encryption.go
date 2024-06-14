@@ -1,7 +1,7 @@
 package lib
 
 import (
-  "crypto/md5"
+	"crypto/md5"
 	"crypto/aes"
 	"crypto/rand"
 	"crypto/cipher"
@@ -60,10 +60,10 @@ func DecryptRead(filename string, key string) (string, error) {
 	if readErr != nil {
 		return "", errors.New("Error when reading encryption file.")
 	}
-  plaintext, decryptErr := decrypt(data, key)
-  if decryptErr != nil || len(plaintext) == 0 {
+	plaintext, decryptErr := decrypt(data, key)
+	if decryptErr != nil || len(plaintext) == 0 {
 		return "", errors.New("Error when decrypting file contents.")
-  }
+	}
 	return string(plaintext), nil
 }
 
