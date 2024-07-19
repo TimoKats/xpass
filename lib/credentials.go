@@ -14,7 +14,6 @@ func findCredentials(lockerContent string, credentialsId string) (string, error)
 		credentialFields := strings.Split(credential, "\t")
 		if credentialFields[0] == credentialsId {
 			Warn.Println("username: ", credentialFields[1])
-			Warn.Println("password: ", credentialFields[2])
 			clipboard.Write(clipboard.FmtText, []byte(credentialFields[2]))
 			Warn.Println("Password copied to clipboard.")
 			return "", nil
